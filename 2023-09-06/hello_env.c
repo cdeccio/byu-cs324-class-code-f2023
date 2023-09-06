@@ -5,6 +5,8 @@
  * $ gcc -o hello_env hello_env.c
  * $ ./hello_env
  * $ FOO=world ./hello_env
+ * $ export FOO=world
+ * $ ./hello_env
  */
 int main(int argc, char *argv[]) {
 	char *envval;
