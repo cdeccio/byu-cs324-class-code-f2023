@@ -1,5 +1,7 @@
 #include<stdio.h>
 
 int main(int argc, char *argv[]) {
-	printf("hello %s\n", argv[1]);
+	char buf[1024];
+	fgets(buf, 512, stdin);
+	printf("hello %s\n", buf);
 }
