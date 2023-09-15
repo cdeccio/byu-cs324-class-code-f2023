@@ -15,11 +15,11 @@ int main() {
 	if (ret == 0) {
 		printf("I am the child!! ret=%d pid=%d ppid=%d\n",
 				ret, getpid(), getppid());
-		sleep(10);
+		sleep(60);
 	} else {
 		printf("I am the parent!! ret=%d pid=%d ppid=%d\n",
 				ret, getpid(), getppid());
-		sleep(60);
+		sleep(10);
 	}
 	sleep(1);
 }
