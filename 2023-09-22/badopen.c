@@ -9,8 +9,8 @@
  * $ ./badopen /etc/shadow
  */
 int main(int argc, char *argv[]) {
-	int fd = open(argv[1], O_RDONLY);
-	if (fd < 0) {
+	int fd;
+	if ((fd = open(argv[1], O_RDONLY)) < 0) {
 		// note that the string passed to perror() is
 		// arbitrary, and is only intended to provide
 		// some context for the error.
