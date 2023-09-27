@@ -19,6 +19,10 @@ int main(int argc, char *argv[]) {
 	sigaction(SIGINT, &sigact, NULL);
 	
 	for (int i = 0; i < 1000; i++) {
+		if (i == 10) {
+			sigact.sa_handler = SIG_DFL;
+			sigaction(SIGINT, &sigact, NULL);
+		}
 		printf("main loop %d\n", i);
 		sleep(1);
 	}
