@@ -4,6 +4,13 @@
 #include<signal.h>
 #include<sys/types.h>
 
+void somefunc(int signum) {
+	for (int i = 0; i < 10; i++) {
+		printf("handler loop %d (signum=%d)\n", i, signum);
+		sleep(1);
+	}
+}
+
 /*
  * $ gcc -o signals signals.c
  * $ ./signals
@@ -12,17 +19,13 @@
 int main(int argc, char *argv[]) {
 	// setup signal handler
 	struct sigaction sigact;
-	sigact.sa_handler = SIG_IGN;
+	sigact.sa_handler = somefunc;
 	sigact.sa_flags = 0;
 
 	// install signal handler for SIGCHLD
 	sigaction(SIGINT, &sigact, NULL);
 	
 	for (int i = 0; i < 1000; i++) {
-		if (i == 10) {
-			sigact.sa_handler = SIG_DFL;
-			sigaction(SIGINT, &sigact, NULL);
-		}
 		printf("main loop %d\n", i);
 		sleep(1);
 	}
