@@ -14,8 +14,7 @@ void somefunc(int signum) {
 /*
  * $ gcc -o signals signals.c
  * $ ./signals
- * Enter Ctrl-C while program is running
- * Then again multiple times while handler is running
+ * Enter Ctrl-C after 3 seconds
  */
 int main(int argc, char *argv[]) {
 
@@ -26,8 +25,10 @@ int main(int argc, char *argv[]) {
 
 	// install signal handler for SIGINT
 	sigaction(SIGINT, &sigact, NULL);
+	sigaction(SIGTERM, &sigact, NULL);
 	
 	for (int i = 0; i < 1000; i++) {
+		if (i == 3) kill(getpid(), SIGTERM);
 		printf("main loop %d\n", i);
 		sleep(1);
 	}
