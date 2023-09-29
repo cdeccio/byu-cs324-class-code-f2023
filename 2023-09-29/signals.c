@@ -4,17 +4,16 @@
 #include<signal.h>
 #include<sys/types.h>
 
+int globx = 12;
+
 void somefunc(int signum) {
-	for (int i = 0; i < 10; i++) {
-		printf("handler loop %d (signum=%d)\n", i, signum);
-		sleep(1);
-	}
+	globx++;
 }
 
 /*
  * $ gcc -o signals signals.c
  * $ ./signals
- * Enter Ctrl-C after 3 seconds
+ * Enter Ctrl-C after program is running
  */
 int main(int argc, char *argv[]) {
 
@@ -25,11 +24,9 @@ int main(int argc, char *argv[]) {
 
 	// install signal handler for SIGINT
 	sigaction(SIGINT, &sigact, NULL);
-	sigaction(SIGTERM, &sigact, NULL);
 	
 	for (int i = 0; i < 1000; i++) {
-		if (i == 3) kill(getpid(), SIGTERM);
-		printf("main loop %d\n", i);
+		printf("main loop %d globx=%d\n", i, globx);
 		sleep(1);
 	}
 }
