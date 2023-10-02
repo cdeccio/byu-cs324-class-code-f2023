@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
 		sleep(5);
 		exit(2); // or return(2); (return from main())
 	}
+	kill(ret, SIGTERM);
 
 	// parent
 	int status;
