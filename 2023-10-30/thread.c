@@ -8,11 +8,16 @@
  * $ ./thread
  */
 void *mythreadfunc(void *myargp) {
+	int *bar = (int *)myargp;
+	(*bar)++;
 	printf("hello from thread\n");
 }
 
 int main() {
 	pthread_t tid;
-	pthread_create(&tid, NULL, mythreadfunc, NULL);
+	int *foo = malloc(sizeof(int));
+	*foo = 0;
+	pthread_create(&tid, NULL, mythreadfunc, foo);
 	sleep(1);
+	printf("*foo: %d\n", *foo);
 }
