@@ -9,13 +9,12 @@
  */
 
 void *mythreadfunc(void *myargp) {
+	sleep(3);
 	printf("hello from thread\n");
-	fclose(stdout);
 }
 
 int main() {
 	pthread_t tid;
 	pthread_create(&tid, NULL, mythreadfunc, NULL);
-	sleep(3);
 	printf("main thread terminating\n");
 }
