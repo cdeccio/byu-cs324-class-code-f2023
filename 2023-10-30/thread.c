@@ -10,6 +10,7 @@
 
 void *mythreadfunc(void *myargp) {
 	printf("hello from thread\n");
+	fclose(stdout);
 }
 
 int main() {
