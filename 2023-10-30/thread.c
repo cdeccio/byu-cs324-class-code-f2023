@@ -7,17 +7,17 @@
  * $ gcc -o thread thread.c
  * $ ./thread
  */
+
+int x = 10;
+
 void *mythreadfunc(void *myargp) {
-	int *bar = (int *)myargp;
-	(*bar)++;
+	x++;
 	printf("hello from thread\n");
 }
 
 int main() {
 	pthread_t tid;
-	int *foo = malloc(sizeof(int));
-	*foo = 0;
-	pthread_create(&tid, NULL, mythreadfunc, foo);
+	pthread_create(&tid, NULL, mythreadfunc, NULL);
 	sleep(1);
-	printf("*foo: %d\n", *foo);
+	printf("x: %d\n", x);
 }
