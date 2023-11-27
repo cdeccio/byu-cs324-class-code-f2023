@@ -164,6 +164,11 @@ int main(int argc, char **argv)
 				int connfd = accept(active_client->fd, remote_addr, &addr_len);
 				
 				// set client file descriptor nonblocking
+				if (fcntl(connfd, F_SETFL, fcntl(connfd, F_GETFL, 0) | O_NONBLOCK) < 0) {
+						fprintf(stderr, "error setting socket option\n");
+						exit(1);
+				}
+
 				if (connfd < 0) {
 					perror("accept");
 					exit(EXIT_FAILURE);
@@ -216,21 +221,29 @@ int main(int argc, char **argv)
 				// read from socket until (1) the remote side
 				// has closed the connection or (2) there is no
 				// data left to be read.
-				char buf[MAXLINE];
-				int len = recv(active_client->fd, buf, 1, 0);
-				if (len == 0) { // EOF received
-					// closing the fd will automatically
-					// unregister the fd from the efd
-					close(active_client->fd);
-					free(active_client);
-				} else if (len < 0) {
-					perror("client recv");
-					close(active_client->fd);
-					free(active_client);
-				} else {
-					active_client->total_length += len;
-					printf("Received %d bytes (total: %d)\n", len, active_client->total_length);
-					send(active_client->fd, buf, len, 0);
+				while (1) {
+					char buf[MAXLINE];
+					int len = recv(active_client->fd, buf, 1, 0);
+					if (len == 0) { // EOF received
+						// closing the fd will automatically
+						// unregister the fd from the efd
+						close(active_client->fd);
+						free(active_client);
+						break;
+					} else if (len < 0) {
+						if (errno == EWOULDBLOCK || errno == EAGAIN) {
+							// no more data to read
+						} else {
+							perror("client recv");
+							close(active_client->fd);
+							free(active_client);
+						}
+						break;
+					} else {
+						active_client->total_length += len;
+						printf("Received %d bytes (total: %d)\n", len, active_client->total_length);
+						send(active_client->fd, buf, len, 0);
+					}
 				}
 			}
 		}
