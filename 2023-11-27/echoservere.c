@@ -217,7 +217,7 @@ int main(int argc, char **argv)
 				// has closed the connection or (2) there is no
 				// data left to be read.
 				char buf[MAXLINE];
-				int len = recv(active_client->fd, buf, MAXLINE, 0);
+				int len = recv(active_client->fd, buf, 1, 0);
 				if (len == 0) { // EOF received
 					// closing the fd will automatically
 					// unregister the fd from the efd
