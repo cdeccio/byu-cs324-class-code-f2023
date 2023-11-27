@@ -212,7 +212,7 @@ int main(int argc, char **argv)
 				// for incoming events using
 				// edge-triggered monitoring
 				event.data.ptr = new_client;
-				event.events = EPOLLIN;
+				event.events = EPOLLIN | EPOLLET;
 				if (epoll_ctl(efd, EPOLL_CTL_ADD, connfd, &event) < 0) {
 					fprintf(stderr, "error adding event\n");
 					exit(1);
@@ -221,7 +221,7 @@ int main(int argc, char **argv)
 				// read from socket until (1) the remote side
 				// has closed the connection or (2) there is no
 				// data left to be read.
-				while (1) {
+				//while (1) {
 					char buf[MAXLINE];
 					int len = recv(active_client->fd, buf, 1, 0);
 					if (len == 0) { // EOF received
@@ -229,7 +229,7 @@ int main(int argc, char **argv)
 						// unregister the fd from the efd
 						close(active_client->fd);
 						free(active_client);
-						break;
+						//break;
 					} else if (len < 0) {
 						if (errno == EWOULDBLOCK || errno == EAGAIN) {
 							// no more data to read
@@ -238,13 +238,13 @@ int main(int argc, char **argv)
 							close(active_client->fd);
 							free(active_client);
 						}
-						break;
+						//break;
 					} else {
 						active_client->total_length += len;
 						printf("Received %d bytes (total: %d)\n", len, active_client->total_length);
 						send(active_client->fd, buf, len, 0);
 					}
-				}
+				//}
 			}
 		}
 	}
